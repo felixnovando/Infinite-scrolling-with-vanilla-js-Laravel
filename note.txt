@@ -6,3 +6,10 @@ get request + post request
 yang dilakukan:
 - matikan csrf validation
 - allow cors
+
+
+note: 
+yang ku test itu zoom browser 150%
+kalau mau normal 100%
+banyakin aja offset nya
+dan di laravel factorynya banyakin
