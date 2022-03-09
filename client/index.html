@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client</title>
+    <style>
+        table, th, td{
+            border: 1px solid black;
+            border-collapse: collapse;
+            padding: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Client</h1>
+    
+    <table>
+        <thead>
+            <th>ID</th>
+            <th>Product Name</th>
+            <th>Product Price</th>
+        </thead>
+        <tbody id="table-body">
+        </tbody>
+    </table>
+
+    <script>
+        const createTableRow = (id, name, price) => {
+            const tableRow = document.createElement("tr")
+            const idTD = document.createElement("td")
+            idTD.innerText = id
+            const nameTD = document.createElement("td")
+            nameTD.innerText = name
+            const priceTD = document.createElement("td")
+            priceTD.innerText = price
+            tableRow.appendChild(idTD)
+            tableRow.appendChild(nameTD)
+            tableRow.appendChild(priceTD)
+            return tableRow
+        }
+
+        const tbody_place = document.getElementById("table-body")
+
+        // fetch("http://localhost:8000/all",{
+        // })
+        // .then(res => res.json())
+        // .then(datas => 
+        //     datas.forEach(data => {
+        //         tbody_place.appendChild(createTableRow(data.id, data.name, data.price))
+        //     })
+        // )
+        
+        let start = 0
+        let offset = 15
+        let isLoading = false
+        
+        const makeFormData = (start, offset) => {
+            const formData = new FormData()
+            formData.append('start', start)
+            formData.append('offset', offset)
+            return formData
+        }
+
+        const loadData = (formData) => {
+            isLoading = true
+            fetch("http://localhost:8000/getItem", {
+                method: 'POST',
+                body: formData
+            }).then(response => response.json())
+            .then(datas => {
+                    datas.forEach(data => tbody_place.appendChild(createTableRow(data.id, data.name, data.price)))
+                    isLoading = false
+                }
+            )
+            .catch(error => {
+                console.log(error)
+                isLoading = false
+            })
+        }
+
+        (() => {
+            loadData(makeFormData(start, offset))
+            start += offset
+        })()
+        
+        window.onscroll = () => {
+            var nearBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
+            if (nearBottom && !isLoading) {
+                loadData(makeFormData(start, offset))
+                start += offset
+            }
+        }
+    </script>
+</body>
+</html>

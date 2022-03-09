@@ -1,0 +1,8 @@
+Hanya ngetes buat API pake laravel
+front end fetch + infinite scrolling (biar keren dkit)
+
+get request + post request
+
+yang dilakukan:
+- matikan csrf validation
+- allow cors
